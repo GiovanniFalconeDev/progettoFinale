@@ -1,4 +1,5 @@
 # progettoFinale
+# Questa web app consente agli utenti registrati e autenticati di visualizzare le playlist di canzoni italiane di spotify nella homepage avendo la possibilità di raggiugnere facilmente la pagina del sito ufficiale spotify relativo alla playlist cliccata
 
 Avviare app in dev mode passaggi
 
