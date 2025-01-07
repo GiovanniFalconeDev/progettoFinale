@@ -11,4 +11,5 @@ assicurarsi di avviare il database mysql su XAMPP e che esista un db nominato pr
 Passaggi
 1) cd .\progettoFinale\
 2) cd .\server\
-3) python -m flask --debug run
+3) pip install -r requirements.txt
+4) python -m flask --debug run
