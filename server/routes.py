@@ -1,19 +1,45 @@
-from flask import Blueprint,Response,jsonify,request,session,url_for,redirect
+from flask import Blueprint,Response,jsonify,request,session,url_for,redirect,render_template
+from flask_cors import CORS,cross_origin
 from models import User
 from validateRules import user_schema,ValidationError
 from userController import UserController
 import hashlib
+from spootifyUtil import makeCallToSpotify,getPlaylists
 
 
 routes = Blueprint('routes', __name__)
 
 #frontend routes
+
+#home page
 @routes.get("/")
 def index():
-    return '<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Document</title> </head> <body> <p>Hello world</p> </body> </html>'
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+    else:
+        userData = User.query.filter_by(id=session['user_id']).first()
+        playlistsData = getPlaylists()
+        return render_template('home.html', nome=userData.nome, cognome=userData.cognome, email=userData.email, playlists = playlistsData['items'], next = playlistsData['next'], previous = playlistsData['previous'])
+
+#login page
+@routes.get("/login")
+def renderLogin():
+    if 'user_id' not in session:
+        return render_template('login.html')
+    else:
+        return redirect(url_for('routes.index'))
+        
+#register page
+@routes.get("/register")
+def renderRegister():
+    if 'user_id' not in session:
+        return render_template('register.html')
+    else:
+         return redirect(url_for('routes.index'))
 
 #autentication routes
 @routes.post("/login")
+@cross_origin(origin='*')
 def login():
     data = request.get_json()
     #print(data)
@@ -25,7 +51,7 @@ def login():
         hashedPassword = hashlib.sha256(data['password'].encode()).hexdigest()
         if(hashedPassword == user.password):
             session['user_id'] = user.id
-            return redirect(url_for('routes.index'))
+            return redirect('/')
         else:
             raise Exception
         
@@ -33,6 +59,7 @@ def login():
         return "Errore: login", 500
 
 @routes.post("/register")
+@cross_origin(origin='*')
 def register():
     #recupero dati dal body della request
     data = request.get_json()
@@ -56,6 +83,17 @@ def register():
         #intercetto errore generico
         return f"Errore: {str(e)}", 500
 
+#logout route
+@routes.get("/logout")
+def logout():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.renderLogin'))
+    else:
+        session.clear()
+        response = Response()
+        response.status = 200
+        return redirect(url_for('routes.renderLogin'))
+        
 '''
 @app.route('/user/<username>')
 def show_user_profile(username):

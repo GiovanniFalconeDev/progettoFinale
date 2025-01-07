@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="w-full min-h-lvh">
+        <div class="w-full flex flex-col gap-8 lg:gap-12 justify-start px-4 py-2 lg:px-20 lg:py-4">
+            <h1 class="w-fit text-2xl font-semibold text-gray-700">Playlist Italiane Spotify</h1>
+            <!-- Playlists -->
+            <div class="w-full flex flex-row gap-6 lg:gap-12 justify-start">
+                {% for item in playlists %}
+                    <div class="w-[195px] flex flex-col gap-4">
+                        <!-- Image -->
+                        <div class="w-[195px] cursor-pointer hover:w-[210px] transition-all aspect-square overflow-hidden rounded-xl shadow-xl">
+                            <a href="{{ item['external_url'] }}" target="_blank">
+                                <img class="w-full object-cover" src="{{ item['image_url'] }}" alt="playlist image">
+                            </a>
+                        </div>
+                        <!-- Description -->
+                        <div class="w-full max-w-[195px]">
+                            <p class="text-sm text-black/50 font-semibold">
+                                {{ item['name'] }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block nome %}
+    {{ nome }}
+{% endblock %}
+
+{% block cognome %}
+    {{ cognome }}
+{% endblock %}
+
+{% block email %}
+    {{ email }}
+{% endblock %}
