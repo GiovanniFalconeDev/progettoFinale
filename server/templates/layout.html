@@ -144,9 +144,38 @@
         }
       }
 
-      function logout(){
+      function nextPlaylists(){
+        url = document.getElementById('pagination').dataset.previous;
+        // Crea un oggetto URL
+        const urlObj = new URL(url);
 
+        // Usa searchParams per ottenere i valori di limit e offset
+        const limit = urlObj.searchParams.get('limit');
+        const offset = urlObj.searchParams.get('offset');
+
+        // Mostra i valori estratti
+        console.log('Limit:', limit);  // 8
+        console.log('Offset:', offset); // 5
+
+        window.location.href='/?limit='+limit+'&offset='+offset;
+      }
+
+      function previousPlaylists(){
+        url = document.getElementById('pagination').dataset.next;
+        // Crea un oggetto URL
+        const urlObj = new URL(url);
+
+        // Usa searchParams per ottenere i valori di limit e offset
+        const limit = urlObj.searchParams.get('limit');
+        const offset = urlObj.searchParams.get('offset');
+
+        // Mostra i valori estratti
+        console.log('Limit:', limit);  // 8
+        console.log('Offset:', offset); // 5
+
+        window.location.href='/?limit='+limit+'&offset='+offset;
       }
     </script>
+    {% block script %}{% endblock %}
 </body>
 </html>

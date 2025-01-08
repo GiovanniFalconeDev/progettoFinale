@@ -17,8 +17,11 @@ def index():
     if 'user_id' not in session:
         return redirect(url_for('routes.login'))
     else:
+        # Recupera i parametri 'limit' e 'offset' dalla query string
+        limit = int(request.args.get('limit', 5))  # Default a 10 se non presente
+        offset = int(request.args.get('offset', 0))
         userData = User.query.filter_by(id=session['user_id']).first()
-        playlistsData = getPlaylists()
+        playlistsData = getPlaylists('italia',limit,offset)
         return render_template('home.html', nome=userData.nome, cognome=userData.cognome, email=userData.email, playlists = playlistsData['items'], next = playlistsData['next'], previous = playlistsData['previous'])
 
 #login page
@@ -51,7 +54,8 @@ def login():
         hashedPassword = hashlib.sha256(data['password'].encode()).hexdigest()
         if(hashedPassword == user.password):
             session['user_id'] = user.id
-            return redirect('/')
+            #print(type(session))
+            return redirect(url_for('routes.index'))#da controllare qua(fixato)
         else:
             raise Exception
         
